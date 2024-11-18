@@ -1,0 +1,20 @@
+[
+    {
+        "number": 1,
+        "title": "الحلقة 1",
+        "image": "https://via.placeholder.com/230x175?text=Ep+1",
+        "link": "episode1.html"
+    },
+    {
+        "number": 2,
+        "title": "الحلقة 2",
+        "image": "https://via.placeholder.com/230x175?text=Ep+2",
+        "link": "episode2.html"
+    },
+    {
+        "number": 3,
+        "title": "الحلقة 3",
+        "image": "https://via.placeholder.com/230x175?text=Ep+3",
+        "link": "episode3.html"
+    }
+]

@@ -18,7 +18,7 @@
                 <span>AMK4UP</span>
             </div>
             <div class="search-bar">
-                <input type="text" placeholder="ابحث عن الانمي المفضل لديك...">
+                <input type="text" placeholder="ابحث عن الأنمي المفضل لديك...">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </div>
             <div class="nav-buttons">
@@ -41,8 +41,9 @@
                 <p id="episode-title">رقم الحلقة: 1</p>
             </div>
             <div class="server-buttons" id="server-buttons-container">
-                <!-- الأزرار ستتم إضافتها هنا ديناميكيًا -->
-            </div>
+                <button onclick="updatePlayerWithUrl('https://megamax.me/iframe/FbqAiHnJ7eFAa')">سيرفر 1</button>
+                <button onclick="updatePlayerWithUrl('https://www.mp4upload.com/embed-enty9vr8j5wc.html')">سيرفر 2</button>
+            </div>            
             <div class="video-container">
                 <iframe id="video-player" src="" frameborder="0" allowfullscreen></iframe>
             </div>
@@ -61,9 +62,8 @@
     <script>
         let episodes = [];
         let currentEpisodeIndex = 0;
-        let currentServerName = 'سيرفرات متعددة FHD';
+        let currentServerName = '';
 
-        // عناصر DOM
         const episodesList = document.getElementById('episodes-list');
         const videoPlayer = document.getElementById('video-player');
         const animeTitle = document.getElementById('anime-title');
@@ -74,102 +74,94 @@
 
         // تحميل البيانات من ملف JSON
         function loadEpisodesData() {
-            fetch('episodes.json')  // تحديد مسار ملف JSON
+            fetch('episodes.json')
                 .then(response => response.json())
                 .then(data => {
-                    episodes = data.episodes;
-                    loadEpisodes(); // عرض الحلقات
-                    updatePlayer(); // تحديث مشغل الفيديو
+                    episodes = data;
+                    loadEpisodes();
+                    updatePlayer();
                 })
                 .catch(error => console.error('Error loading episodes data:', error));
         }
 
-        // عرض الحلقات في القائمة الجانبية
-// عرض الحلقات في القائمة الجانبية
-function loadEpisodes() {
-    episodesList.innerHTML = ''; // مسح الحلقات السابقة
-    episodes.forEach(episode => {
-        const li = document.createElement('li');
-        const link = document.createElement('a');
-        link.textContent = episode.title;
-        link.href = `/onepiece/${episode.pageUrl}`; // استخدام رابط الصفحة
-        link.style.color = 'inherit'; // تطبيق النمط "color: inherit;" على الرابط
-        li.appendChild(link);
-        episodesList.appendChild(li);
-    });
-}
-
-
-            
-            episodesList.innerHTML = ''; // مسح الحلقات السابقة
+        // عرض قائمة الحلقات
+        function loadEpisodes() {
+            episodesList.innerHTML = '';
             episodes.forEach((episode, index) => {
                 const li = document.createElement('li');
-                li.textContent = episode.title;
                 li.className = 'episode-item';
+                li.textContent = episode.title;
                 li.addEventListener('click', () => playEpisode(index));
                 episodesList.appendChild(li);
             });
-        
-
-        // عرض الأزرار الخاصة بالسيرفرات
-        function loadServerButtons(episode) {
-            serverButtonsContainer.innerHTML = ''; // مسح الأزرار السابقة
-            episode.servers.forEach((server, index) => {
-                const button = document.createElement('button');
-                button.textContent = server.serverName;
-                button.addEventListener('click', () => {
-                    currentServerName = server.serverName;
-                    updatePlayer(server.url);  // تحديث مشغل الفيديو مع رابط السيرفر
-                });
-                serverButtonsContainer.appendChild(button);
-            });
         }
 
-        // تشغيل الحلقة المحددة
+        // عرض السيرفرات للحلقة
+        function loadServerButtons() {
+    serverButtonsContainer.innerHTML = ''; // مسح الأزرار السابقة
+    const currentEpisode = episodes[currentEpisodeIndex];
+
+    currentEpisode.servers.forEach(server => {
+        const button = document.createElement('button');
+        button.textContent = server.serverName;
+        button.classList.add('server-button');
+        if (server.serverName === currentServerName) {
+            button.classList.add('active'); // تحديد السيرفر الحالي
+        }
+        button.addEventListener('click', () => {
+            currentServerName = server.serverName;
+            videoPlayer.src = server.url; // تحديث مشغل الفيديو
+            loadServerButtons(); // إعادة تحديث أزرار السيرفرات
+        });
+        serverButtonsContainer.appendChild(button);
+    });
+}
+
+        // تحديث الفيديو بناءً على الحلقة المحددة
+        function updatePlayer() {
+    const currentEpisode = episodes[currentEpisodeIndex];
+    animeTitle.textContent = "اسم الأنمي"; // يمكن تغييره ديناميكيًا
+    episodeTitle.textContent = `رقم الحلقة: ${currentEpisode.number}`;
+
+    // اختيار السيرفر الأول كافتراضي إذا لم يكن هناك سيرفر محدد
+    if (!currentServerName && currentEpisode.servers.length > 0) {
+        currentServerName = currentEpisode.servers[0].serverName;
+    }
+
+    const currentServer = currentEpisode.servers.find(server => server.serverName === currentServerName);
+    if (currentServer) {
+        videoPlayer.src = currentServer.url; // تحميل رابط السيرفر
+    } else {
+        console.warn('لا يوجد سيرفر مناسب.');
+    }
+
+    loadServerButtons(); // عرض أزرار السيرفرات
+}
+
+        // تشغيل حلقة محددة
         function playEpisode(index) {
             currentEpisodeIndex = index;
-            updatePlayer();  // تحديث مشغل الفيديو
-        }
-
-        // تحديث مشغل الفيديو بناءً على الحلقة والسيرفر المحدد
-        function updatePlayer(serverUrl) {
-            const currentEpisode = episodes[currentEpisodeIndex];
-            const currentServer = currentEpisode.servers.find(server => server.serverName === currentServerName);
-            if (currentServer) {
-                videoPlayer.src = serverUrl || currentServer.url;  // إذا كان الرابط موجودًا، نستخدمه مباشرة
-            }
-
-            // تحديث اسم الأنمي ورقم الحلقة
-            animeTitle.textContent = "اسم الأنمي"; // يمكن تغييره ديناميكيًا إذا أردت
-            episodeTitle.textContent = `رقم الحلقة: ${currentEpisodeIndex + 1}`;
-            loadServerButtons(currentEpisode); // تحديث الأزرار الخاصة بالسيرفرات
+            updatePlayer();
         }
 
         // التنقل بين الحلقات
         function navigateEpisode(direction) {
             currentEpisodeIndex += direction;
-            if (currentEpisodeIndex < 0) {
-                currentEpisodeIndex = 0;
-            } else if (currentEpisodeIndex >= episodes.length) {
-                currentEpisodeIndex = episodes.length - 1;
-            }
+            if (currentEpisodeIndex < 0) currentEpisodeIndex = 0;
+            if (currentEpisodeIndex >= episodes.length) currentEpisodeIndex = episodes.length - 1;
             updatePlayer();
         }
 
-        // أحداث التنقل
         prevBtn.addEventListener('click', () => navigateEpisode(-1));
         nextBtn.addEventListener('click', () => navigateEpisode(1));
 
-        // تحميل البيانات عند تحميل الصفحة
+        // تبديل الوضع بين الداكن والفاتح
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+        });
+
         window.onload = loadEpisodesData;
     </script>
-    
-       <!-- تبديل الوضع -->
-   <script>
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-    });
-</script>
 </body>
 </html>

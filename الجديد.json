@@ -1,8 +1,8 @@
 [
     {
         "name": "One Piece",
-        "link": "onepiece/onepiece.html",
-        "image": "../images/OnePiece.jpg",
+        "link": "onepiece/1.html",
+        "image": "images/OnePiece.jpg",
         "rating": "9.8",
         "episodes": "1000+ حلقة"
     },

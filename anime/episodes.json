@@ -3,7 +3,7 @@
         "number": 1,
         "title": "الحلقة 1",
         "image": "https://via.placeholder.com/230x175?text=Ep+1",
-        "link": "onepiece/1.html"
+        "link": "../onepiece/1.html"
     },
     {
         "number": 2,

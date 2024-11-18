@@ -1,0 +1,20 @@
+[
+    {
+        "number": 1,
+        "title": "الحلقة 1",
+        "image": "../images/episodes_One Piece",
+        "link": "../episodes/One Piece الحلقة 1.html"
+    },
+    {
+        "number": 2,
+        "title": "الحلقة 2",
+        "image": "../images/episodes_One Piece",
+        "link": "../episodes/One Piece الحلقة 1.html"
+    },
+    {
+        "number": 3,
+        "title": "الحلقة 3",
+        "image": "../images/episodes_One Piece",
+        "link": "../episodes/One Piece الحلقة 1.html"
+    }
+]

@@ -1,0 +1,19 @@
+[
+    {
+        "name": "One Piece",
+        "link": "anime/One Piece 1.html",
+        "image": "images/OnePiece.jpg",
+        "rating": "9.8",
+        "episodes": "1 حلقة"
+    },
+    {
+        "name": "Blue Lock vs. U-20 Japan",
+        "link": "anime/onepiece.html",
+        "image": "https://2u.pw/NBgPWzCb",
+        "rating": "9.2",
+        "نوع": "مسلسلات الانمي",
+        "موعد": "الاحد",
+        "الحالة": "متوقف",
+        "episodes": "1 حلقة"
+    }
+]
